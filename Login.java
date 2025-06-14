@@ -1,8 +1,12 @@
 import model.User;
 import admin.KelolaAkun;
 import admin.KelolaPelanggan;
+import admin.KelolaPelanggan.Pelanggan;
+import admin.KelolaPelanggan.Pesanan;
 import admin.KelolaLayanan;
+import admin.KelolaLayanan.Layanan;
 import admin.KelolaDiskon;
+import admin.KelolaDiskon.Diskon;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,13 +17,21 @@ public class Login {
     private KelolaPelanggan kelolaPelanggan;
     private KelolaLayanan kelolaLayanan;
     private KelolaDiskon kelolaDiskon;
+    private ArrayList<Pelanggan> daftarPelanggan;
+    private ArrayList<Layanan> daftarLayanan;
+    private ArrayList<Diskon> daftarDiskon;
+    private ArrayList<Pesanan> daftarPesanan;
 
-    public Login(ArrayList<User> users) {
+    public Login(ArrayList<User> users, ArrayList<Pelanggan> daftarPelanggan, ArrayList<Layanan> daftarLayanan, ArrayList<Diskon> daftarDiskon) {
         this.kelolaAkun = new KelolaAkun(users);
-        // Initialize admin components
-        this.kelolaPelanggan = new KelolaPelanggan();
-        this.kelolaLayanan = new KelolaLayanan();
-        this.kelolaDiskon = new KelolaDiskon();
+        this.daftarPelanggan = daftarPelanggan;
+        this.daftarLayanan = daftarLayanan;
+        this.daftarDiskon = daftarDiskon;
+        this.daftarPesanan = new ArrayList<>();
+        
+        this.kelolaPelanggan = new KelolaPelanggan(this.daftarPelanggan, this.daftarPesanan);
+        this.kelolaLayanan = new KelolaLayanan(this.daftarLayanan);
+        this.kelolaDiskon = new KelolaDiskon(this.daftarDiskon);
     }
 
     public void run() {
@@ -28,8 +40,7 @@ public class Login {
         while (!isAppEnd) {
             System.out.println("\n===== APLIKASI LAUNDRY =====");
             if (currentUser != null) {
-                System.out.println("Anda login sebagai: " + currentUser.getUsername() + 
-                                 " (" + currentUser.getRole() + ")");
+                System.out.println("Anda login sebagai: " + currentUser.getUsername() + " (" + currentUser.getRole() + ")");
                 redirectToRoleMenu();
                 currentUser = null;
                 continue;
@@ -67,7 +78,7 @@ public class Login {
 
     private void redirectToRoleMenu() {
         if (currentUser.getRole().equals("admin")) {
-            admin.MenuAdmin menuAdmin = new admin.MenuAdmin(kelolaAkun.getDaftarUser());
+            admin.MenuAdmin menuAdmin = new admin.MenuAdmin(kelolaAkun.getDaftarUser(), kelolaPelanggan, kelolaLayanan, kelolaDiskon);
             menuAdmin.showMenu();
         } else {
             kasir.MenuKasir menuKasir = new kasir.MenuKasir(kelolaPelanggan, kelolaLayanan, kelolaDiskon);
@@ -132,6 +143,10 @@ public class Login {
 
     public static void main(String[] args) {
         ArrayList<User> users = new ArrayList<>();
-        new Login(users).run();
+        ArrayList<Pelanggan> daftarPelanggan = new ArrayList<>();
+        ArrayList<Layanan> daftarLayanan = new ArrayList<>();
+        ArrayList<Diskon> daftarDiskon = new ArrayList<>();
+        
+        new Login(users, daftarPelanggan, daftarLayanan, daftarDiskon).run();
     }
 }

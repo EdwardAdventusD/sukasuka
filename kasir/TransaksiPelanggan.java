@@ -121,7 +121,6 @@ public class TransaksiPelanggan {
             System.out.println("Pilihan layanan tidak valid!");
             return null;
         }
-        
         return kelolaLayanan.getDaftarLayanan().get(pilihan - 1);
     }
 
@@ -134,21 +133,20 @@ public class TransaksiPelanggan {
             System.out.println("Berat harus lebih dari 0 kg!");
             return -1;
         }
-        
         return berat;
     }
 
     private KelolaDiskon.Diskon pilihDiskon() {
-        if (kelolaDiskon.getDaftarDiskon().isEmpty()) {
-            System.out.println("\nTidak ada diskon yang tersedia saat ini.");
-            return null;
-        }
-        
+    if (kelolaDiskon.getDaftarDiskon().isEmpty()) {
+        System.out.println("\nTidak ada diskon yang tersedia saat ini.");
+        return null;
+    }
+
+    while (true) {
         System.out.println("\n--- DAFTAR DISKON ---");
         int nomorUrut = 1;
         for (KelolaDiskon.Diskon diskon : kelolaDiskon.getDaftarDiskon()) {
-            System.out.println(nomorUrut++ + ". " + diskon.getNama() + " - " + diskon.getPersentase() + 
-                             "% (Kuota tersisa: " + diskon.getSisaPenggunaan() + ")");
+            System.out.println(nomorUrut++ + ". " + diskon.getNama() + " - " + diskon.getPersentase() + "% (Kuota tersisa: " + diskon.getSisaPenggunaan() + ")");
         }
         
         System.out.print("\nPilih Diskon (nomor, 0 untuk tidak menggunakan diskon): ");
@@ -161,18 +159,18 @@ public class TransaksiPelanggan {
         
         if (pilihan < 1 || pilihan > kelolaDiskon.getDaftarDiskon().size()) {
             System.out.println("Pilihan diskon tidak valid!");
-            return null;
+            continue;
         }
         
         KelolaDiskon.Diskon diskonTerpilih = kelolaDiskon.getDaftarDiskon().get(pilihan - 1);
         
         if (diskonTerpilih.getSisaPenggunaan() <= 0) {
-            System.out.println("Kuota diskon ini telah habis!");
-            return null;
+            System.out.println("Kuota diskon ini telah habis! Silakan pilih diskon lain.");
+            continue;
         }
-        
         return diskonTerpilih;
     }
+}
 
     private double[] hitungTotalHarga(KelolaLayanan.Layanan layanan, double berat, KelolaDiskon.Diskon diskon) {
         double subtotal = berat * layanan.getHargaPerKg();
@@ -183,7 +181,6 @@ public class TransaksiPelanggan {
             subtotal -= potongan;
             diskon.tambahKuota(-1);
         }
-        
         return new double[]{subtotal, potongan};
     }
 
@@ -198,18 +195,10 @@ public class TransaksiPelanggan {
             pilihan = scanner.nextInt();
             scanner.nextLine();
         }
-        
         return pilihan == 1 ? "Lunas" : "Belum Lunas";
     }
 
-    private void tampilkanDetailTransaksi(KelolaPelanggan.Pelanggan pelanggan, 
-                                        KelolaLayanan.Layanan layanan, 
-                                        double berat, 
-                                        KelolaDiskon.Diskon diskon, 
-                                        double potongan, 
-                                        double total,
-                                        String statusPembayaran,
-                                        String statusPesanan) {
+    private void tampilkanDetailTransaksi(KelolaPelanggan.Pelanggan pelanggan, KelolaLayanan.Layanan layanan, double berat, KelolaDiskon.Diskon diskon, double potongan, double total, String statusPembayaran, String statusPesanan) {
         System.out.println("\n===== DETAIL TRANSAKSI =====");
         System.out.println("Pelanggan: " + pelanggan.getNama() + " (" + pelanggan.getNik() + ")");
         System.out.println("Telepon: " + pelanggan.getNomorTelepon());
@@ -229,25 +218,10 @@ public class TransaksiPelanggan {
         System.out.println("============================");
     }
 
-    private void simpanTransaksi(KelolaPelanggan.Pelanggan pelanggan,
-                               KelolaLayanan.Layanan layanan,
-                               double berat,
-                               KelolaDiskon.Diskon diskon,
-                               double total,
-                               String statusPembayaran) {
+    private void simpanTransaksi(KelolaPelanggan.Pelanggan pelanggan, KelolaLayanan.Layanan layanan, double berat, KelolaDiskon.Diskon diskon, double total, String statusPembayaran) {
         String namaDiskon = diskon != null ? diskon.getNama() : null;
         double persentaseDiskon = diskon != null ? diskon.getPersentase() : 0;
         
-        kelolaPelanggan.tambahPesanan(
-            pelanggan.getNik(),
-            layanan.getNama(),
-            berat,
-            layanan.getHargaPerKg(),
-            namaDiskon,
-            persentaseDiskon,
-            total,
-            statusPembayaran,
-            STATUS_MASUK
-        );
+        kelolaPelanggan.tambahPesanan(pelanggan.getNik(), layanan.getNama(), berat, layanan.getHargaPerKg(), namaDiskon, persentaseDiskon, total, statusPembayaran, STATUS_MASUK);
     }
 }

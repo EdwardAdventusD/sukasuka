@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class KelolaDiskon {
-    private ArrayList<Diskon> daftarDiskon = new ArrayList<>();
+    private ArrayList<Diskon> daftarDiskon;
     private Scanner scanner = new Scanner(System.in);
 
     public static class Diskon {
@@ -32,15 +32,17 @@ public class KelolaDiskon {
 
         @Override
         public String toString() {
-            return String.format("Nama: %-15s | Diskon: %5.1f%% | Sisa Kuota: %3d", 
-                               nama, persentase, sisaPenggunaan);
+            return String.format("Nama: %-15s | Diskon: %5.1f%% | Sisa Kuota: %3d", nama, persentase, sisaPenggunaan);
         }
     }
 
-    public KelolaDiskon() {
-        // Tambahkan 2 diskon default
-        daftarDiskon.add(new Diskon("Hari Raya", 15.0, 50));
-        daftarDiskon.add(new Diskon("New Member", 10.0, 100));
+    public KelolaDiskon(ArrayList<Diskon> daftarDiskon) {
+        this.daftarDiskon = daftarDiskon;
+        
+        if (this.daftarDiskon.isEmpty()) {
+            this.daftarDiskon.add(new Diskon("Hari Raya", 15.0, 50));
+            this.daftarDiskon.add(new Diskon("Member Baru", 10.0, 100));
+        }
     }
 
     public void menu() {
@@ -59,15 +61,18 @@ public class KelolaDiskon {
 
                 switch (pilihan) {
                     case 1:
+                        tampilkanDiskon();
                         tambahDiskon();
                         break;
                     case 2:
                         tampilkanDiskon();
                         break;
                     case 3:
+                        tampilkanDiskon();
                         updateDiskon();
                         break;
                     case 4:
+                        tampilkanDiskon();
                         hapusDiskon();
                         break;
                     case 0:
@@ -149,7 +154,7 @@ public class KelolaDiskon {
         
         System.out.println("\nPilihan Update:");
         System.out.println("1. Ubah Persentase");
-        System.out.println("2. Tambah Kuota");
+        System.out.println("2. Ubah Kuota");
         System.out.print("Pilihan: ");
         
         int pilihan = scanner.nextInt();
@@ -170,16 +175,16 @@ public class KelolaDiskon {
                 break;
                 
             case 2:
-                System.out.print("Masukkan Jumlah Kuota Tambahan: ");
-                int tambahan = scanner.nextInt();
+                System.out.print("Masukkan Jumlah Kuota Baru: ");
+                int kuotaBaru = scanner.nextInt();
                 scanner.nextLine();
                 
-                if (tambahan <= 0) {
-                    System.out.println("Kuota tambahan harus lebih dari 0!");
+                if (kuotaBaru <= 0) {
+                    System.out.println("Kuota harus lebih dari 0!");
                     return;
                 }
-                diskon.tambahKuota(tambahan);
-                System.out.println("Kuota diskon berhasil ditambah!");
+                diskon.tambahKuota(kuotaBaru - diskon.getSisaPenggunaan());
+                System.out.println("Kuota diskon berhasil diupdate!");
                 break;
                 
             default:

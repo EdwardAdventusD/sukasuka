@@ -6,18 +6,18 @@ import model.User;
 
 public class MenuAdmin {
     private ArrayList<User> users;
-    private Scanner scanner;
     private KelolaPelanggan kelolaPelanggan;
     private KelolaLayanan kelolaLayanan;
     private KelolaDiskon kelolaDiskon;
+    private Scanner scanner;
     private KelolaAkun kelolaAkun;
 
-    public MenuAdmin(ArrayList<User> users) {
+    public MenuAdmin(ArrayList<User> users, KelolaPelanggan kelolaPelanggan, KelolaLayanan kelolaLayanan, KelolaDiskon kelolaDiskon) {
         this.users = users;
+        this.kelolaPelanggan = kelolaPelanggan;
+        this.kelolaLayanan = kelolaLayanan;
+        this.kelolaDiskon = kelolaDiskon;
         this.scanner = new Scanner(System.in);
-        this.kelolaPelanggan = new KelolaPelanggan();
-        this.kelolaLayanan = new KelolaLayanan();
-        this.kelolaDiskon = new KelolaDiskon();
         this.kelolaAkun = new KelolaAkun(users);
     }
 

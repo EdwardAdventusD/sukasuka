@@ -13,14 +13,14 @@ public class KelolaAkun {
         this.scanner = new Scanner(System.in);
         
         if (this.daftarUser.isEmpty()) {
-            this.daftarUser.add(new User("admin", "admin123", "admin"));
-            this.daftarUser.add(new User("kasir", "kasir123", "kasir"));
+            this.daftarUser.add(new User("admin", "123", "admin"));
+            this.daftarUser.add(new User("kasir", "123", "kasir"));
         } else {
             if (this.daftarUser.stream().noneMatch(u -> u.getUsername().equals("admin"))) {
-                this.daftarUser.add(new User("admin", "admin123", "admin"));
+                this.daftarUser.add(new User("admin", "123", "admin"));
             }
             if (this.daftarUser.stream().noneMatch(u -> u.getUsername().equals("kasir"))) {
-                this.daftarUser.add(new User("kasir", "kasir123", "kasir"));
+                this.daftarUser.add(new User("kasir", "123", "kasir"));
             }
         }
     }
@@ -58,15 +58,18 @@ public class KelolaAkun {
 
                 switch (pilihan) {
                     case 1:
+                        tampilkanAkun();
                         tambahAkun();
                         break;
                     case 2:
                         tampilkanAkun();
                         break;
                     case 3:
+                        tampilkanAkun();
                         editAkun();
                         break;
                     case 4:
+                        tampilkanAkun();
                         hapusAkun();
                         break;
                     case 0:
@@ -162,7 +165,6 @@ public class KelolaAkun {
                 System.out.println("Role tidak valid, data role tidak diubah");
             }
         }
-        
         System.out.println("Akun berhasil diupdate!");
     }
 
@@ -181,7 +183,6 @@ public class KelolaAkun {
             System.out.println("Tidak bisa menghapus akun default!");
             return;
         }
-        
         daftarUser.remove(user);
         System.out.println("Akun berhasil dihapus!");
     }

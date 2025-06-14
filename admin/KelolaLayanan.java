@@ -4,15 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class KelolaLayanan {
-    private ArrayList<Layanan> daftarLayanan = new ArrayList<>();
+    private ArrayList<Layanan> daftarLayanan;
     private Scanner scanner = new Scanner(System.in);
-
-    public KelolaLayanan() {
-        // Add default services
-        daftarLayanan.add(new Layanan("Cuci Kering", 5500));
-        daftarLayanan.add(new Layanan("Cuci Setrika", 7500));
-        daftarLayanan.add(new Layanan("Setrika", 3500));
-    }
 
     public static class Layanan {
         private String nama;
@@ -34,6 +27,16 @@ public class KelolaLayanan {
         }
     }
 
+    public KelolaLayanan(ArrayList<Layanan> daftarLayanan) {
+        this.daftarLayanan = daftarLayanan;
+        
+        if (this.daftarLayanan.isEmpty()) {
+            this.daftarLayanan.add(new Layanan("Cuci Kering", 5500));
+            this.daftarLayanan.add(new Layanan("Cuci Setrika", 7500));
+            this.daftarLayanan.add(new Layanan("Setrika", 3500));
+        }
+    }
+
     public void menu() {
         while (true) {
             System.out.println("\n===== KELOLA LAYANAN =====");
@@ -50,15 +53,18 @@ public class KelolaLayanan {
 
                 switch (pilihan) {
                     case 1:
+                        tampilkanLayanan();
                         tambahLayanan();
                         break;
                     case 2:
                         tampilkanLayanan();
                         break;
                     case 3:
+                        tampilkanLayanan();
                         updateLayanan();
                         break;
                     case 4:
+                        tampilkanLayanan();
                         hapusLayanan();
                         break;
                     case 0:
@@ -139,7 +145,6 @@ public class KelolaLayanan {
         String namaBaru = scanner.nextLine().trim();
         
         if (!namaBaru.isEmpty()) {
-            // Cek jika nama baru sudah digunakan oleh layanan lain
             if (!namaBaru.equalsIgnoreCase(namaLama)) {
                 if (cariLayananByNama(namaBaru) != null) {
                     System.out.println("Nama layanan sudah digunakan!");
@@ -152,7 +157,7 @@ public class KelolaLayanan {
         System.out.print("Masukkan Harga Baru (0 jika tidak ingin mengubah): ");
         try {
             double hargaBaru = scanner.nextDouble();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); 
             
             if (hargaBaru > 0) {
                 layanan.setHargaPerKg(hargaBaru);
@@ -164,7 +169,7 @@ public class KelolaLayanan {
             System.out.println("Layanan berhasil diupdate!");
         } catch (Exception e) {
             System.out.println("Harga harus berupa angka!");
-            scanner.nextLine(); // Clear invalid input
+            scanner.nextLine(); 
         }
     }
 
@@ -178,7 +183,6 @@ public class KelolaLayanan {
             System.out.println("Layanan tidak ditemukan!");
             return;
         }
-        
         daftarLayanan.remove(layanan);
         System.out.println("Layanan berhasil dihapus!");
     }

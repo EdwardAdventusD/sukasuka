@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class KelolaPelanggan {
-    private List<Pelanggan> daftarPelanggan = new ArrayList<>();
-    private ArrayList<Pesanan> daftarPesanan = new ArrayList<>();
+    private List<Pelanggan> daftarPelanggan;
+    private ArrayList<Pesanan> daftarPesanan;
     private int lastOrderId = 0;
     private Scanner scanner = new Scanner(System.in);
 
@@ -29,8 +29,7 @@ public class KelolaPelanggan {
 
         @Override
         public String toString() {
-            return String.format("NIK: %s | Nama: %-20s | Telp: %s", 
-                               nik, nama, nomorTelepon);
+            return String.format("NIK: %s | Nama: %-20s | Telp: %s", nik, nama, nomorTelepon);
         }
     }
 
@@ -47,10 +46,7 @@ public class KelolaPelanggan {
         private String statusPesanan;
         private String tanggalMasuk;
 
-        public Pesanan(String idPesanan, String nikPelanggan, String namaLayanan, 
-                      double berat, double hargaPerKg, String namaDiskon, 
-                      double persentaseDiskon, double total, 
-                      String statusPembayaran, String statusPesanan) {
+        public Pesanan(String idPesanan, String nikPelanggan, String namaLayanan, double berat, double hargaPerKg, String namaDiskon, double persentaseDiskon, double total, String statusPembayaran, String statusPesanan) {
             this.idPesanan = idPesanan;
             this.nikPelanggan = nikPelanggan;
             this.namaLayanan = namaLayanan;
@@ -61,7 +57,7 @@ public class KelolaPelanggan {
             this.total = total;
             this.statusPembayaran = statusPembayaran;
             this.statusPesanan = statusPesanan;
-            this.tanggalMasuk = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
+            this.tanggalMasuk = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date());
         }
 
         public String getIdPesanan() { return idPesanan; }
@@ -81,15 +77,19 @@ public class KelolaPelanggan {
 
         @Override
         public String toString() {
-            return String.format("ID: %s | Layanan: %-15s | Berat: %.2fkg | Total: Rp%.2f | Pembayaran: %-12s | Status: %-8s | Tanggal: %s",
-                               idPesanan, namaLayanan, berat, total, statusPembayaran, statusPesanan, tanggalMasuk);
+            return String.format("ID: %s | Layanan: %-15s | Berat: %.2fkg | Total: Rp%.2f | Pembayaran: %-12s | Status: %-8s | Tanggal: %s", idPesanan, namaLayanan, berat, total, statusPembayaran, statusPesanan, tanggalMasuk);
         }
     }
 
-    public KelolaPelanggan() {
-        daftarPelanggan.add(new Pelanggan("123", "Cinta Lestari", "0812345"));
-        daftarPelanggan.add(new Pelanggan("345", "Budiono", "081321"));
-        daftarPelanggan.add(new Pelanggan("567", "Citra Dewi", "08123123"));
+    public KelolaPelanggan(List<Pelanggan> daftarPelanggan, ArrayList<Pesanan> daftarPesanan) {
+        this.daftarPelanggan = daftarPelanggan;
+        this.daftarPesanan = daftarPesanan;
+        
+        if (this.daftarPelanggan.isEmpty()) {
+            this.daftarPelanggan.add(new Pelanggan("123", "Cinta Lestari", "0812345"));
+            this.daftarPelanggan.add(new Pelanggan("345", "Budiono", "081321"));
+            this.daftarPelanggan.add(new Pelanggan("567", "Citra Dewi", "08123123"));
+        }
     }
 
     public void menu() {
@@ -109,18 +109,37 @@ public class KelolaPelanggan {
                 scanner.nextLine();
 
                 switch (pilihan) {
-                    case 1: tambahPelanggan(); break;
-                    case 2: tampilkanPelanggan(); break;
-                    case 3: updatePelanggan(); break;
-                    case 4: hapusPelanggan(); break;
-                    case 5: cariPelanggan(); break;
-                    case 6: tampilkanSemuaPesanan(); break;
-                    case 0: return;
-                    default: System.out.println("Pilihan tidak valid!");
+                    case 1: 
+                        tampilkanPelanggan();
+                        tambahPelanggan(); 
+                        break;
+                    case 2: 
+                        tampilkanPelanggan(); 
+                        break;
+                    case 3: 
+                        tampilkanPelanggan();
+                        updatePelanggan(); 
+                        break;
+                    case 4: 
+                        tampilkanPelanggan();
+                        hapusPelanggan(); 
+                        break;
+                    case 5: 
+                        tampilkanPelanggan();
+                        cariPelanggan(); 
+                        break;
+                    case 6: 
+                        tampilkanSemuaPesanan(); 
+                        break;
+                    case 0: 
+                        return;
+                    default: 
+                        System.out.println("Pilihan tidak valid!");
                 }
             } catch (Exception e) {
                 System.out.println("Input harus berupa angka!");
                 scanner.nextLine();
+                tampilkanPelanggan();
             }
         }
     }
@@ -275,9 +294,7 @@ public class KelolaPelanggan {
         return hasil;
     }
 
-    public void tambahPesanan(String nikPelanggan, String namaLayanan, double berat, 
-                            double hargaPerKg, String namaDiskon, double persentaseDiskon,
-                            double total, String statusPembayaran, String statusPesanan) {
+    public void tambahPesanan(String nikPelanggan, String namaLayanan, double berat, double hargaPerKg, String namaDiskon, double persentaseDiskon, double total, String statusPembayaran, String statusPesanan) {
         String idPesanan = "ORD" + (++lastOrderId);
         Pesanan pesanan = new Pesanan(idPesanan, nikPelanggan, namaLayanan, berat, 
                                     hargaPerKg, namaDiskon, persentaseDiskon, 
@@ -296,17 +313,27 @@ public class KelolaPelanggan {
     }
 
     public void tampilkanSemuaPesanan() {
-        System.out.println("\n--- Daftar Semua Pesanan ---");
+        System.out.println("\n--- DAFTAR SEMUA TRANSAKSI ---");
         if (daftarPesanan.isEmpty()) {
-            System.out.println("Belum ada pesanan yang tercatat.");
+            System.out.println("============================================================================================================================");
+            System.out.printf("%-6s | %-12s | %-15s | %-6s | %-10s | %-15s | %-10s | %-8s | %-8s | %-20s\n", "ID", "NIK", "Layanan", "Berat", "Harga/kg", "Diskon", "Total", "Bayar", "Status", "Waktu");
+            System.out.println("============================================================================================================================");
+            System.out.println("Belum ada transaksi yang tercatat.");
+            System.out.println("============================================================================================================================");
             return;
         }
         
-        System.out.println("==================================================================================================");
+        System.out.println("============================================================================================================================");
+        System.out.printf("%-6s | %-12s | %-15s | %-6s | %-10s | %-15s | %-10s | %-8s | %-8s | %-20s\n", "ID", "NIK", "Layanan", "Berat", "Harga/kg", "Diskon", "Total", "Bayar", "Status", "Waktu");
+        System.out.println("============================================================================================================================");
+        
         for (Pesanan p : daftarPesanan) {
-            System.out.println(p);
+            String diskonDisplay = p.getNamaDiskon() != null ? 
+                                 String.format("%s (%.1f%%)", p.getNamaDiskon(), p.getPersentaseDiskon()) : "-";
+            
+            System.out.printf("%-6s | %-12s | %-15s | %6.2f | %10.2f | %-15s | %10.2f | %-8s | %-8s | %-20s\n", p.getIdPesanan(), p.getNikPelanggan(), p.getNamaLayanan(), p.getBerat(), p.getHargaPerKg(), diskonDisplay, p.getTotal(), p.getStatusPembayaran(), p.getStatusPesanan(), p.getTanggalMasuk());
         }
-        System.out.println("==================================================================================================");
+        System.out.println("============================================================================================================================");
     }
 
     public void tampilkanRiwayatTransaksi(String nik) {

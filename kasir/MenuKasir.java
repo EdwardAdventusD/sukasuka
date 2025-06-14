@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuKasir {
-    // Status constants
     public static final String STATUS_MASUK = "Masuk";
     public static final String STATUS_DIPROSES = "Diproses";
     public static final String STATUS_SELESAI = "Selesai";
